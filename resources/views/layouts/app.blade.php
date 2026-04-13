@@ -51,11 +51,20 @@
             
             <div class="flex items-center space-x-4">
                 <div class="text-right hidden md:block">
-                    <p class="text-sm font-bold text-gray-700">Admin</p>
+                    <p class="text-sm font-bold text-gray-700">{{ Auth::user()->name ?? 'Admin' }}</p>
                     <p class="text-xs text-[#26408d]">Administrator</p>
                 </div>
                 <div class="h-10 w-10 bg-blue-50 border-2 border-[#26408d] rounded-full flex items-center justify-center text-[#26408d] font-bold">
                     <i class="fa-solid fa-user"></i>
+                </div>
+                
+                <div class="border-l border-gray-300 pl-4 ml-2">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition" title="Keluar">
+                            <i class="fa-solid fa-power-off text-xl"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>
@@ -69,7 +78,6 @@
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
             
-            // Logika: Jika sidebar lebarnya 64 (tampil), ubah jadi 0 (sembunyi)
             if(sidebar.classList.contains('w-64')) {
                 sidebar.classList.remove('w-64');
                 sidebar.classList.add('w-0');

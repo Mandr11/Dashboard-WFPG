@@ -10,16 +10,12 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class DatasetController extends Controller
 {
-    // READ: Tampilkan halaman utama & daftar dataset
     public function index()
     {
         $datasets = Dataset::latest()->get();
         return view('dashboard.index', compact('datasets'));
     }
 
-    // CREATE: Proses upload file
-    // CREATE: Proses upload file
-    // CREATE: Proses upload file
     public function store(Request $request)
     {
         $request->validate(['files.*' => 'required|mimes:csv,txt']);
@@ -31,10 +27,8 @@ class DatasetController extends Controller
                 // Simpan file ke disk 'local'
                 $path = $file->storeAs('datasets', $name, 'local'); 
                 
-                // CARA PALING AMPUH: Biarkan Laravel yang memberikan alamat lengkapnya
                 $rawPath = Storage::disk('local')->path($path);
                 
-                // Bersihkan garis miring agar Python di Windows tidak pusing
                 $safePath = str_replace('\\', '/', $rawPath);
 
                 Dataset::create([
@@ -45,7 +39,6 @@ class DatasetController extends Controller
         }
         return back()->with('success', 'File berhasil diunggah!');
     }
-    // DELETE: Hapus file dari storage & database
     public function destroy($id)
     {
         $dataset = Dataset::findOrFail($id);
