@@ -1,1 +1,4 @@
 *.sqlite*
+
+# Menyembunyikan Virtual Environment Python
+venv-python/
