@@ -111,6 +111,8 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
 <script>
     // Ambil data JSON dari Laravel
     const itemsetData = @json($result['top_itemsets'] ?? []);
@@ -140,11 +142,12 @@
         });
     }
 
-    // 2. Setup Doughnut Chart
+    // 2. Setup Doughnut Chart (Diperbarui dengan Persentase)
     if (distData.length > 0) {
         const ctx2 = document.getElementById('distributionChart').getContext('2d');
         new Chart(ctx2, {
             type: 'doughnut',
+            plugins: [ChartDataLabels], 
             data: {
                 labels: distData.map(row => row['Menu']),
                 datasets: [{
@@ -161,7 +164,27 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'right', labels: { boxWidth: 15 } }
+                    legend: { 
+                        position: 'right', 
+                        labels: { boxWidth: 15 } 
+                    },
+                    datalabels: {
+                        color: '#ffffff', 
+                        font: {
+                            weight: 'bold',
+                            size: 11 
+                        },
+                        formatter: (value, context) => {
+                            let dataArr = context.chart.data.datasets[0].data;
+                            let total = dataArr.reduce((a, b) => a + b, 0);
+                            let percentage = (value * 100 / total).toFixed(1) + "%";
+                            
+                            if((value * 100 / total) < 5) {
+                                return '';
+                            }
+                            return percentage;
+                        }
+                    }
                 }
             }
         });
